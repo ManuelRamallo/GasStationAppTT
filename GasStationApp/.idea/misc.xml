@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.15070921985815602" />
-        <entry key="app/src/main/res/layout/fragment_gas_stations.xml" value="0.15092592592592594" />
+        <entry key="app/src/main/res/drawable/background_cardview_light.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/fragment_gas_stations.xml" value="0.2778335571289063" />
+        <entry key="app/src/main/res/layout/item_category.xml" value="0.6272727272727273" />
       </map>
     </option>
   </component>
