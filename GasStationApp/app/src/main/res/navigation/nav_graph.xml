@@ -9,5 +9,14 @@
         android:id="@+id/gasStationsFragment"
         android:name="com.mramallo.gasstationapp.ui.gastStations.GasStationsFragment"
         android:label="fragment_gas_stations"
-        tools:layout="@layout/fragment_gas_stations" />
+        tools:layout="@layout/fragment_gas_stations" >
+        <action
+            android:id="@+id/action_gasStationsFragment_to_gasStationDetailFragment"
+            app:destination="@id/gasStationDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gasStationDetailFragment"
+        android:name="com.mramallo.gasstationapp.ui.gasStationDetail.GasStationDetailFragment"
+        android:label="fragment_gas_station_detail"
+        tools:layout="@layout/fragment_gas_station_detail" />
 </navigation>
