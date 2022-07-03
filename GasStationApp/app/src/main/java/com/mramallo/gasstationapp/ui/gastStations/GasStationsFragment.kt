@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mramallo.gasstationapp.databinding.FragmentGasStationsBinding
+import com.mramallo.gasstationapp.domain.model.GeneralDataGasStation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,6 +18,7 @@ class GasStationsFragment : Fragment() {
 
     private val viewModel: GasStationViewModel by viewModels()
     private lateinit var binding: FragmentGasStationsBinding
+    private var categorySelected: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,6 +35,7 @@ class GasStationsFragment : Fragment() {
 
         setupObserverHead()
         setupRecyclerAndObserverCategories()
+        setupRecyclerAndObserverStores()
     }
 
     private fun setupObserverHead(){
@@ -59,21 +62,48 @@ class GasStationsFragment : Fragment() {
         binding.rvCategories.layoutManager = manager
         viewModel.categories.observe(viewLifecycleOwner) {
             binding.rvCategories.adapter = CategoriesAdapter(it) { category ->
-                onGasStationSelected(category)
+                onCategorySelected(category)
             }
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) {
             binding.progressCategory.isVisible = it
-            binding.rvCategories.isVisible = !it
-            binding.rvStores.isVisible = !it
         }
     }
 
-    private fun onGasStationSelected(category: String) {
-        Log.d("GASDATA", "La categoría seleccionada es: $category")
-        // TODO - YA TENEMOS LA CATEGORÍA SELECCIONADA, SOLO FALTA MOSTRAR LA LISTA DE NUEVO FILTRANDO POR LA CATEGORÍA SELECCIONADA
+    private fun onCategorySelected(category: String) {
+        /** If the category is selected 2 times, reload all the stores to default*/
+        if(categorySelected == category) {
+            filteredByCategory("")
+            categorySelected = ""
+            return
+        }
+        filteredByCategory(category)
+        categorySelected = category
     }
 
+    private fun setupRecyclerAndObserverStores() {
+        val manager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        binding.rvStores.layoutManager = manager
+        viewModel.generalDataGasStationModel.observe(viewLifecycleOwner) {
+            binding.rvStores.adapter = GasStationAdapter(it) { store ->
+                onGasStationSelected(store)
+            }
+        }
+    }
+
+    private fun onGasStationSelected(store: GeneralDataGasStation) {
+        Log.d("GASDATA", "La store seleccionada es: ${store.name}")
+        // TODO - AQUÍ LO QUE TENEMOS QUE HACER ES IRNOS A LA PANTALLA DE INFO DEL COMERCIO SELECCIONADO
+    }
+
+
+    private fun filteredByCategory(categorySelected: String) {
+        viewModel.storesFilteredByCategories(categorySelected)
+        viewModel.isLoading.observe(viewLifecycleOwner) {
+            binding.rvStores.isVisible = !it
+        }
+    }
 
 }
