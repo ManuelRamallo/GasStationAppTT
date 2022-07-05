@@ -12,10 +12,12 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:minHeight="?android:attr/actionBarSize"
+        android:textAlignment="center"
         android:background="@color/white">
 
 
-        <TextView
+        <!--<TextView
+            android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/main_title_toolbar"
@@ -24,7 +26,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:fontFamily="@font/araboto_normal_400"
-            android:id="@+id/toolbar_title" />
+             />-->
 
 
     </androidx.appcompat.widget.Toolbar>

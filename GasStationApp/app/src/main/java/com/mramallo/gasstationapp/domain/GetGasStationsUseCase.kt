@@ -19,7 +19,4 @@ class GetGasStationsUseCase @Inject constructor(private val repository: GasStati
     }
 
 
-    // TODO - REALIZAR TAMBIEN UN CASO DE USO PARA MOSTRAR LA LISTA DE LOS COMERCIOS
-
-
 }

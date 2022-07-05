@@ -16,11 +16,18 @@ class GasStationDetailViewModel @Inject constructor(
 ): ViewModel() {
 
     val store = MutableLiveData<GeneralDataGasStation>()
+    val isLoading = MutableLiveData<Boolean>()
 
     fun onCreate(id_store: String) {
-        Log.d("GASDATA", "ID STORE: $id_store")
         viewModelScope.launch {
-            store.postValue(getGasStationDetailUseCase(id_store))
+            isLoading.postValue(true)
+            val storeData = getGasStationDetailUseCase(id_store)
+
+            if(storeData != null) {
+                store.postValue(storeData)
+                isLoading.postValue(false)
+            }
+
         }
     }
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F8F8"
+    android:background="@color/gray_background"
     tools:context=".ui.gastStations.GasStationsFragment">
 
     <LinearLayout
@@ -110,7 +110,7 @@
         app:layout_constraintTop_toBottomOf="@+id/ll_head_stores" />
 
     <ProgressBar
-        android:id="@+id/progress_category"
+        android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

@@ -19,6 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GasStationApp"
         tools:targetApi="31">
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyAo0WBZ_rlDEdvK6tTpfMBE796kOa5834Q"/>
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">

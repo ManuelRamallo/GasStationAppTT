@@ -1,5 +1,6 @@
 package com.mramallo.gasstationapp.ui.gastStations
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mramallo.gasstationapp.R
 import com.mramallo.gasstationapp.databinding.FragmentGasStationsBinding
 import com.mramallo.gasstationapp.domain.model.GeneralDataGasStation
+import com.mramallo.gasstationapp.ui.gasStationDetail.GasStationDetailFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,6 +24,8 @@ class GasStationsFragment : Fragment() {
     private val viewModel: GasStationViewModel by viewModels()
     private lateinit var binding: FragmentGasStationsBinding
     private var categorySelected: String = ""
+    private var listener: OnGasStationFragment? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,6 +33,11 @@ class GasStationsFragment : Fragment() {
     ): View {
         binding = FragmentGasStationsBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        listener?.onChangeToolbarTitle(getString(R.string.main_title_toolbar), false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,6 +56,7 @@ class GasStationsFragment : Fragment() {
             binding.tvTotalCountStores.text = it.size.toString()
         }
 
+        // TODO - CONTINUE WITH FILTER BY DISTANCE WITH THE USER
         // Total found stores to head
         /*viewModel.generalDataGasStationModel.observe(viewLifecycleOwner) {
             var results: FloatArray = FloatArray(1)
@@ -70,7 +80,9 @@ class GasStationsFragment : Fragment() {
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.progressCategory.isVisible = it
+            binding.progress.isVisible = it
+            binding.rvCategories.isVisible = !it
+            binding.rvStores.isVisible = !it
         }
     }
 
@@ -97,8 +109,6 @@ class GasStationsFragment : Fragment() {
     }
 
     private fun onGasStationSelected(store: GeneralDataGasStation) {
-        Log.d("GASDATA", "La store seleccionada es: ${store.name}")
-        // TODO - AQUÍ LO QUE TENEMOS QUE HACER ES IRNOS A LA PANTALLA DE INFO DEL COMERCIO SELECCIONADO
         findNavController().navigate(
             R.id.action_gasStationsFragment_to_gasStationDetailFragment,
             bundleOf("id_store" to store.id)
@@ -113,4 +123,12 @@ class GasStationsFragment : Fragment() {
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        this.listener = context as? OnGasStationFragment
+    }
+
+    interface OnGasStationFragment {
+        fun onChangeToolbarTitle(title: String?, showBack: Boolean)
+    }
 }

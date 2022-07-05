@@ -6,10 +6,11 @@
         <entry key="app/src/main/res/drawable/background_cardview_light.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_arrow_right.xml" value="0.1185" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.18" />
-        <entry key="app/src/main/res/layout/fragment_gas_station_detail.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_gas_station_detail.xml" value="0.22333374023437502" />
         <entry key="app/src/main/res/layout/fragment_gas_stations.xml" value="0.2778335571289063" />
         <entry key="app/src/main/res/layout/item_category.xml" value="0.6272727272727273" />
         <entry key="app/src/main/res/layout/item_store.xml" value="0.22726536503544567" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_back.xml" value="0.1775" />
       </map>
     </option>
   </component>
