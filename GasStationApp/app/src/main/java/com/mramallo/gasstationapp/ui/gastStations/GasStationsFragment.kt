@@ -1,21 +1,24 @@
 package com.mramallo.gasstationapp.ui.gastStations
 
 import android.content.Context
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.maps.model.LatLng
 import com.mramallo.gasstationapp.R
 import com.mramallo.gasstationapp.databinding.FragmentGasStationsBinding
 import com.mramallo.gasstationapp.domain.model.GeneralDataGasStation
-import com.mramallo.gasstationapp.ui.gasStationDetail.GasStationDetailFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -44,30 +47,37 @@ class GasStationsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.onCreate()
         viewModel.getCategories()
+        viewModel.storesOrderByDistance()
 
         setupObserverHead()
         setupRecyclerAndObserverCategories()
-        setupRecyclerAndObserverStores()
+        setupRecyclerAndObserverStores(false)
     }
 
-    private fun setupObserverHead(){
+    private fun setupObserverHead() {
         // Total stores to head
         viewModel.generalDataGasStationModel.observe(viewLifecycleOwner) {
             binding.tvTotalCountStores.text = it.size.toString()
         }
 
-        // TODO - CONTINUE WITH FILTER BY DISTANCE WITH THE USER
-        // Total found stores to head
-        /*viewModel.generalDataGasStationModel.observe(viewLifecycleOwner) {
-            var results: FloatArray = FloatArray(1)
-            Location.distanceBetween(it[0].latitude?.toDouble()!!, it[0].longitude?.toDouble()!!, it[0].latitude?.toDouble()!!, it[0].longitude?.toDouble()!!, results)
-            var distanceInmeters = results[0]
-            var isWithin1km = distanceInmeters < 1000
+        viewModel.generalDataGasStationModelByDistance.observe(viewLifecycleOwner) {
+            binding.tvFoundCountStores.text = it.size.toString()
+        }
 
-            Log.d("GASDATA", "location -> $isWithin1km")
-        }*/
+        // Button to reload all stores
+        binding.cvAllStores.setOnClickListener {
+            viewModel.onCreate()
+            renderButtonsHead(false)
+        }
+
+        // Button to load stores by distance
+        binding.cvStoresDistance.setOnClickListener {
+            viewModel.storesOrderByDistance()
+            setupRecyclerAndObserverStores(true)
+            renderButtonsHead(true)
+        }
+
     }
-
 
     private fun setupRecyclerAndObserverCategories() {
         val manager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -88,7 +98,7 @@ class GasStationsFragment : Fragment() {
 
     private fun onCategorySelected(category: String) {
         /** If the category is selected 2 times, reload all the stores to default*/
-        if(categorySelected == category) {
+        if (categorySelected == category) {
             filteredByCategory("")
             categorySelected = ""
             return
@@ -97,14 +107,51 @@ class GasStationsFragment : Fragment() {
         categorySelected = category
     }
 
-    private fun setupRecyclerAndObserverStores() {
+    private fun setupRecyclerAndObserverStores(isByDistance: Boolean) {
         val manager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         binding.rvStores.layoutManager = manager
-        viewModel.generalDataGasStationModel.observe(viewLifecycleOwner) {
-            binding.rvStores.adapter = GasStationAdapter(it) { store ->
-                onGasStationSelected(store)
+        if(!isByDistance) {
+            viewModel.generalDataGasStationModel.observe(viewLifecycleOwner) {
+                binding.rvStores.adapter = GasStationAdapter(it) { store ->
+                    onGasStationSelected(store)
+                }
             }
+        } else {
+            viewModel.generalDataGasStationModelByDistance.observe(viewLifecycleOwner) {
+                binding.rvStores.adapter = GasStationAdapter(it) { store ->
+                    onGasStationSelected(store)
+                }
+            }
+        }
+    }
+
+    private fun renderButtonsHead(isByDistanceClicked: Boolean) {
+        if (!isByDistanceClicked) {
+            // Background cards
+            binding.cvAllStores.setCardBackgroundColor(this.view?.context?.getColor(R.color.blue_dark)!!)
+            binding.cvStoresDistance.setCardBackgroundColor(this.view?.context?.getColor(R.color.white)!!)
+
+            // Text total stores
+            binding.tvTotalCountStores.setTextColor(this.view?.context?.getColor(R.color.white)!!)
+            binding.tvTotalCountStoresSubtitle.setTextColor(this.view?.context?.getColor(R.color.white)!!)
+
+            // Text founded stores
+            binding.tvFoundCountStores.setTextColor(this.view?.context?.getColor(R.color.orange_dark)!!)
+            binding.tvFoundCountStoresSubtitle.setTextColor(this.view?.context?.getColor(R.color.gray_light)!!)
+
+        } else {
+            // Background cards
+            binding.cvStoresDistance.setCardBackgroundColor(this.view?.context?.getColor(R.color.blue_dark)!!)
+            binding.cvAllStores.setCardBackgroundColor(this.view?.context?.getColor(R.color.white)!!)
+
+            // Text total stores
+            binding.tvTotalCountStores.setTextColor(this.view?.context?.getColor(R.color.orange_dark)!!)
+            binding.tvTotalCountStoresSubtitle.setTextColor(this.view?.context?.getColor(R.color.gray_light)!!)
+
+            // Text founded stores
+            binding.tvFoundCountStores.setTextColor(this.view?.context?.getColor(R.color.white)!!)
+            binding.tvFoundCountStoresSubtitle.setTextColor(this.view?.context?.getColor(R.color.white)!!)
         }
     }
 

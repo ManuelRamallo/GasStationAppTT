@@ -42,7 +42,6 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="end|center"
-                    android:text="250m."
                     android:fontFamily="@font/araboto_normal_400"
                     android:textStyle="bold"
                     android:textSize="20sp"

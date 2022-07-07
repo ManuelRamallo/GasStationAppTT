@@ -13,7 +13,7 @@ class GetGasStationsUseCase @Inject constructor(private val repository: GasStati
         return if(generalData != null) {
             generalData
         } else {
-            Log.d("GASDATA", "Entra en el else porque el general data falla")
+            Log.d("GASDATA", "Ha ocurrido al obtener los datos del generalData")
             null
         }
     }
